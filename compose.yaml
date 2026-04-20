@@ -1,0 +1,26 @@
+services:
+    db:
+        image: pgrouting/pgrouting:16-3.5-3.7
+        restart: always
+        ports:
+            - "5434:5432"
+        expose:
+            - 5434
+        volumes:
+            - postgres:/var/lib/postgresql/data
+            #- ./dev_db_init:/docker-entrypoint-initdb.d # only necessary if using an init
+            #- ~/postgres_data_mount/data:/data # Handy if you want to share files with container for import/export
+        #env_file:
+        #    - .env # if you have env variables like a proxy
+        environment:
+            - POSTGRES_PASSWORD=local
+            - POSTGRES_USER=localdb
+            - POSTGRES_DB=localdb
+            - PROJ_NETWORK=ON # for postgis
+        healthcheck:
+            test: psql -U localdb -tAc 'select 1' -d localdb
+            interval: 15s
+            timeout: 10s
+            retries: 10
+volumes:
+    postgres:

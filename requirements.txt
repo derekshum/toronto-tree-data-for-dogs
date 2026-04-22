@@ -1,5 +1,7 @@
-ruff
+geoalchemy2
 geopandas
 pytest
-psycopg
+psycopg[binary]>=3.1
 requests
+ruff
+sqlalchemy>=2.0

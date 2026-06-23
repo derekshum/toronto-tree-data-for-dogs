@@ -1,8 +1,9 @@
-import requests
 import json
-import pandas as pd
-import geopandas as gpd
 from io import StringIO
+
+import geopandas as gpd
+import pandas as pd
+import requests
 from shapely.geometry import shape
 from sqlalchemy import create_engine
 
@@ -29,12 +30,10 @@ def refresh_data(id: str, table_name: str, column_renames: dict[str, str] = {}):
 
         # for datastore_active resources:
         if resource["datastore_active"]:
-            
             # To get all records in CSV format:
             url = BASE_URL + "/datastore/dump/" + resource["id"]
             resource_dump_data = requests.get(url).text
             df = pd.read_csv(StringIO(resource_dump_data))
-            
             df["geometry"] = df["geometry"].apply(
                 lambda geometry_str: 
                     shape(json.loads(geometry_str)) 
@@ -56,19 +55,19 @@ def refresh_data(id: str, table_name: str, column_renames: dict[str, str] = {}):
 
 # refresh trees
 refresh_data(
-    "street-tree-data", 
-    "trees", 
+    "street-tree-data",
+    "trees",
     {
         "_id": "id",
-        "OBJECTID": "object_id", 
+        "OBJECTID": "object_id",
         "STRUCTID": "struct_id",
-        "ADDRESS": "address", 
-        "STREETNAME": "street_name", 
+        "ADDRESS": "address",
+        "STREETNAME": "street_name",
         "CROSSSTREET1": "cross_street_1",
-        "CROSSSTREET2": "cross_street_2", 
+        "CROSSSTREET2": "cross_street_2",
         "SUFFIX": "suffix",
         "UNIT_NUMBER": "unit_number",
-        "TREE_POSITION_NUMBER": "tree_position_number", 
+        "TREE_POSITION_NUMBER": "tree_position_number",
         "SITE": "site",
         "WARD": "ward",
         "BOTANICAL_NAME": "botanical_name",
@@ -80,11 +79,11 @@ refresh_data(
 
 # refresh off leash areas
 refresh_data(
-    "off-leash-areas", 
-    "off_leash_areas", 
+    "off-leash-areas",
+    "off_leash_areas",
     {
         "_id": "id",
-        "OBJECTID": "object_id", 
+        "OBJECTID": "object_id",
         "STRUCTID": "struct_id"
     }
 )

@@ -1,4 +1,13 @@
 services:
+    api:
+        build: .
+        ports:
+        - "5000:5000"
+        environment:
+        - DATABASE_URL=postgresql+psycopg://localdb:local@db:5432/localdb
+        depends_on:
+        db:
+            condition: service_healthy
     db:
         image: pgrouting/pgrouting:16-3.5-3.7
         restart: always
